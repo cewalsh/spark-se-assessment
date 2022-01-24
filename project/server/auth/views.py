@@ -47,7 +47,7 @@ class RegisterAPI(MethodView):
                 responseObject = {
                     'status': 'success',
                     'message': 'Successfully registered.',
-                    'auth_token': auth_token
+                    'auth_token': auth_token 
                     # 'auth_token': auth_token.decode()
                 }
                 return make_response(jsonify(responseObject)), 201
