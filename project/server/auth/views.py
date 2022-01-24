@@ -1,5 +1,6 @@
 from flask import Blueprint, request, make_response, jsonify
 from flask.views import MethodView
+from importlib_metadata import email
 
 from project.server import bcrypt, db
 from project.server.models import User
@@ -20,28 +21,38 @@ class RegisterAPI(MethodView):
 
     def post(self):
         # get the post data
-        post_data = request.get_json(); print(request)
+        post_data = request.get_json()
+        print(request)
+        # print(post_data)
+        # print('the email is ' + post_data.get('email'))
         # check if user already exists
         user = User.query.filter_by(email=post_data.get('email')).first()
+        print(user)
         if not user:
+            print('no user')
             try:
                 user = User(
                     email=post_data.get('email'),
                     password=post_data.get('password')
                 )
-
+                print('inserting user')
                 # insert the user
                 db.session.add(user)
                 db.session.commit()
+                print('this worked')
                 # generate the auth token
                 auth_token = user.encode_auth_token(user.id)
+                print('generated token: ')
+                print(type(auth_token))
                 responseObject = {
                     'status': 'success',
                     'message': 'Successfully registered.',
-                    'auth_token': auth_token.decode()
+                    'auth_token': auth_token
+                    # 'auth_token': auth_token.decode()
                 }
                 return make_response(jsonify(responseObject)), 201
             except Exception as e:
+                print('the exception is ' + str(e))
                 responseObject = {
                     'status': 'fail',
                     'message': 'Some error occurred. Please try again.'
