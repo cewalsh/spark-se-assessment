@@ -1,6 +1,6 @@
 from flask import Blueprint, request, make_response, jsonify
 from flask.views import MethodView
-from importlib_metadata import email
+# from importlib_metadata import email
 
 from project.server import bcrypt, db
 from project.server.models import User
